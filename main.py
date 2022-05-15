@@ -239,10 +239,10 @@ def onmessage(update,bot:ObigramClient):
     try:
         thread = bot.this_thread
         username = update.message.sender.username
-        tl_admin_user = os.environ.get('tl_admin_user','*')
+        tl_admin_user = os.environ.get('tl_admin_user')
 
-        #Descomentar debajo solo si se ba a poner el usuario admin de telegram manual
-        #tl_admin_user = 'LarryPL'
+        #set in debug
+        tl_admin_user = 'Unk980929'
 
         jdb = JsonDatabase('database')
         jdb.check_create()
@@ -250,7 +250,7 @@ def onmessage(update,bot:ObigramClient):
 
         user_info = jdb.get_user(username)
 
-        if username == tl_admin_user or tl_admin_user=='*' or user_info :  # validate user
+        if username == tl_admin_user or user_info :  # validate user
             if user_info is None:
                 if username == tl_admin_user:
                     jdb.create_admin(username)
@@ -479,9 +479,9 @@ def onmessage(update,bot:ObigramClient):
 
         if '/start' in msgText:
             start_msg = 'Bot          : TGUploaderPro v7.0 Fixed\n'
-            start_msg+= 'Desarrollador: @obisoftdevel\n'
-            start_msg+= 'Api          : https://github.com/ObisoftDev/tguploaderpro\n'
-            start_msg+= 'Uso          :Envia Enlaces De Descarga y Archivos Para Procesar (Configure Antes De Empezar , Vea El /tutorial)\n'
+            start_msg+= 'Desarrollador: @Unk980929\n'
+            start_msg+= 'Api          : https://github.com/Unk980929/tguploaderpro\n'
+            start_msg+= 'Uso          : Uploader to the Moodles Free\n'
             bot.editMessageText(message,start_msg)
         elif '/files' == msgText and user_info['cloudtype']=='moodle':
              proxy = ProxyCloud.parse(user_info['proxy'])
@@ -558,9 +558,9 @@ def onmessage(update,bot:ObigramClient):
             #    bot_token = os.environ.get('bot_token')
             #    
                 # set in debug
-            #    api_id = 7386053
-            #    api_hash = '78d1c032f3aa546ff5176d9ff0e7f341'
-            #    bot_token = '5124841893:AAH30p6ljtIzi2oPlaZwBmCfWQ1KelC6KUg'
+            #    api_id = 19919438
+            #    api_hash = 'c6ef54eb0cdd29441ae33921531cb4e8'
+            #    bot_token = '5228380609:AAF9SQNPN6nDIyD7v_Aav6UZ1A02EpF9bPE'
 
             #    chat_id = int(update.message.chat.id)
             #    message_id = int(update.message.message_id)
