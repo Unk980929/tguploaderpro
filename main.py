@@ -8,6 +8,7 @@ import os
 import infos
 import xdlink
 import mediafire
+import multiFile
 #from megacli.mega import Mega
 #import megacli.megafolder as megaf
 #import megacli.mega
