@@ -503,12 +503,12 @@ class MoodleClient(object):
     def upload_file_calendar(self,file,progressfunc=None,args=(),tokenize=False):
             file_edit = f'{self.path}/calendar/managesubscriptions.php'
             #https://eduvirtual.uho.edu.cu/user/profile.php
-            resp = self.session.get(file_edit,proxies=self.proxy,headers=self.baseheaders)
+            resp = self.session.get(file_edit,proxies=self.proxy)
             soup = BeautifulSoup(resp.text, 'html.parser')
             sesskey = self.sesskey
             if self.sesskey=='':
                 sesskey  =  soup.find('input',attrs={'name':'sesskey'})['value']
-            usertext =  'ObisoftDev'
+            usertext =  'User0075_69'
             query = self.extractQuery(soup.find('object',attrs={'type':'text/html'})['data'])
             client_id = str(soup.find('input',{'name':'importfilechoose'})['id']).replace('filepicker-button-','')
 
@@ -516,15 +516,9 @@ class MoodleClient(object):
 
             of = open(file,'rb')
             b = uuid.uuid4().hex
-            try:
-                areamaxbyttes = query['areamaxbytes']
-                if areamaxbyttes=='0':
-                    areamaxbyttes = '-1'
-            except:
-                areamaxbyttes = '-1'
             upload_data = {
                 'title':(None,''),
-                'author':(None,'ObysoftDev'),
+                'author':(None,'User0075_69'),
                 'license':(None,'allrightsreserved'),
                 'itemid':(None,query['itemid']),
                 'repo_id':(None,str(self.repo_id)),
@@ -534,7 +528,7 @@ class MoodleClient(object):
                 'sesskey':(None,sesskey),
                 'client_id':(None,client_id),
                 'maxbytes':(None,query['maxbytes']),
-                'areamaxbytes':(None,areamaxbyttes),
+                'areamaxbytes':(None,query['maxbytes']),
                 'ctx_id':(None,query['ctx_id']),
                 'savepath':(None,'/')}
             upload_file = {
@@ -546,28 +540,42 @@ class MoodleClient(object):
             progrescall = CallingUpload(progressfunc,file,args)
             callback = partial(progrescall)
             monitor = MultipartEncoderMonitor(encoder,callback=callback)
-            resp2 = self.session.post(post_file_url,data=monitor,headers={"Content-Type": "multipart/form-data; boundary="+b,**self.baseheaders},proxies=self.proxy)
+            resp2 = self.session.post(post_file_url,data=monitor,headers={"Content-Type": "multipart/form-data; boundary="+b},proxies=self.proxy)
             of.close()
             
             data = self.parsejson(resp2.text)
             data['url'] = str(data['url']).replace('\\','')
-           
-            event = self.createNewEvent(data)
-
-            if event:
-                if len(event)>0:
-                    html = event[0]['data']['event']['description']
-                    soup = BeautifulSoup(html, 'html.parser')
-                    data['url'] = soup.find('a')['href']
-
-            data['normalurl'] = data['url']
-
             if self.userdata:
                 if 'token' in self.userdata and not tokenize:
                     data['url'] = str(data['url']).replace('pluginfile.php/','webservice/pluginfile.php/') + '?token=' + self.userdata['token']
                 if tokenize:
                     data['url'] = self.host_tokenize + S5Crypto.encrypt(data['url']) + '/' + self.userdata['s5token']
             return None,data
+    
+    def parsejson(self,json):
+        data = {}
+        tokens = str(json).replace('{','').replace('}','').split(',')
+        for t in tokens:
+            split = str(t).split(':',1)
+            data[str(split[0]).replace('"','')] = str(split[1]).replace('"','')
+        return data
+
+    def getclientid(self,html):
+        index = str(html).index('client_id')
+        max = 25
+        ret = html[index:(index+max)]
+        return str(ret).replace('client_id":"','')
+
+    def extractQuery(self,url):
+        tokens = str(url).split('?')[1].split('&')
+        retQuery = {}
+        for q in tokens:
+            qspl = q.split('=')
+            try:
+                retQuery[qspl[0]] = qspl[1]
+            except:
+                 retQuery[qspl[0]] = None
+        return retQuery
     
     def parsejson(self,json):
         data = {}
