@@ -61,7 +61,7 @@ class MoodleClient(object):
         self.proxy = None
         if proxy :
            self.proxy = proxy.as_dict_proxy()
-        self.baseheaders = headers = {'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:99.0) Gecko/20100101 Firefox/99.0'}
+        self.baseheaders = headers = {'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.72 Safari/537.36'}
 
     def getsession(self):
         return self.session
@@ -136,7 +136,7 @@ class MoodleClient(object):
     def delete(self,enlace):
         try:
             fileurl = self.path+'/user/edit.php?id='+self.userid+'&returnto=profile'
-            resp = self.session.get(fileurl,headers = {'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:99.0) Gecko/20100101 Firefox/99.0'},proxies=self.proxy)
+            resp = self.session.get(fileurl,headers = {'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.72 Safari/537.36'},proxies=self.proxy)
             soup = BeautifulSoup(resp.text,'html.parser')
             sesskey  =  soup.find('input',attrs={'name':'sesskey'})['value']
             _qf__user_files_form = 1
@@ -162,10 +162,10 @@ class MoodleClient(object):
                 post_delete = self.path+f'/lib/ajax/service.php?sesskey={sesskey}&info=core_calendar_delete_calendar_events'
                 payload=[{"index":0,"methodname":"core_calendar_delete_calendar_events","args":{
                 "events":[{"eventid":int(itemid),"repeat":False}]}}]
-                resp2=self.session.post(post_delete,headers = {'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:99.0) Gecko/20100101 Firefox/99.0'},json=payload,proxies=self.proxy)
+                resp2=self.session.post(post_delete,headers = {'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.72 Safari/537.36'},json=payload,proxies=self.proxy)
             else:
                 post_delete = self.path+'/repository/draftfiles_ajax.php?action=delete'
-                resp2=self.session.post(post_delete,headers = {'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:99.0) Gecko/20100101 Firefox/99.0'},data=payload,proxies=self.proxy)
+                resp2=self.session.post(post_delete,headers = {'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.72 Safari/537.36'},data=payload,proxies=self.proxy)
 
             return True
         except:
